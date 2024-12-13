@@ -7,14 +7,14 @@ import {
 	Heading,
 	Text,
 	useColorModeValue,
-	useToast,
-} from "@chakra-ui/react";
-import type { NextPage } from "next";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-
-import ColormodeToggle from "@/colormodeToggle";
-
+	useToast
+} from '@chakra-ui/react';
+import type { NextPage } from 'next';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
+ 
+import ColormodeToggle from '@/colormodeToggle';
+ 
 type Data = {
 	collected: {
 		m: number;
@@ -26,16 +26,16 @@ type Data = {
 		su: number;
 	};
 };
-
+ 
 const Home: NextPage = () => {
 	const [collectedData, setCollectedData] = useState<Data>();
 	const [update, setUpdate] = useState(0);
 	const toast = useToast();
-
-	const days = ["m", "t", "w", "th", "f", "s", "su"];
-
+ 
+	const days = ['m', 't', 'w', 'th', 'f', 's', 'su'];
+ 
 	useEffect(() => {
-		fetch("/api/getCollectedBadges")
+		fetch('/api/getCollectedBadges')
 			.then((r) => r.json())
 			.then((res) => {
 				setCollectedData(res as Data);
@@ -43,33 +43,33 @@ const Home: NextPage = () => {
 			})
 			.catch(() => {
 				toast({
-					title: "Error",
-					description: "There was an error getting the badges",
-					status: "error",
+					title: 'Error',
+					description: 'There was an error getting the badges',
+					status: 'error',
 					duration: 5000,
-					isClosable: true,
+					isClosable: true
 				});
 			});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [update]);
-
-	const boxBorder = useColorModeValue("gray.300", "gray.700");
-	const textColor = useColorModeValue("gray.600", "gray.400");
-
+ 
+	const boxBorder = useColorModeValue('gray.300', 'gray.700');
+	const textColor = useColorModeValue('gray.600', 'gray.400');
+ 
 	return (
 		<Container maxW="6xl" p={4}>
 			<Grid templateColumns="repeat(3, 1fr)" gap={4} mb={4}>
 				<Heading>Welcome user!</Heading>
-
+ 
 				<Flex justifyContent="flex-end">
 					<ColormodeToggle />
 				</Flex>
 			</Grid>
-
+ 
 			<Heading my={8} size="md">
 				Here are the available badges
 			</Heading>
-
+ 
 			<Grid templateColumns="repeat(7, 1fr)" gap={4}>
 				{[...Array(7)].map((_, i) => (
 					<Box
@@ -80,58 +80,50 @@ const Home: NextPage = () => {
 						borderColor={boxBorder}
 						p={4}
 						_hover={{
-							shadow: "lg",
+							shadow: 'lg'
 						}}
 					>
-						<Image
-							src={`/badges/${i}.png`}
-							alt="badge"
-							width={200}
-							height={200}
-						/>
-
+						<Image src={`/badges/${i}.png`} alt="badge" width={200} height={200} />
+ 
 						<Text align="center" my={4}>
-							{"Mon|Tues|Wenes|Thurs|Fri|Satur|Sun".split("|")[
-								i
-							] + "day"}
+							{'Mon|Tues|Wenes|Thurs|Fri|Satur|Sun'.split('|')[i] + 'day'}
 						</Text>
-
+ 
 						<Text align="center" color={textColor}>
 							{
 								//@ts-ignore
 								collectedData?.collected[days[i]]
-							}{" "}
+							}{' '}
 							collected
 						</Text>
 					</Box>
 				))}
 			</Grid>
-
+ 
 			<Button
 				mt={4}
 				colorScheme="blue"
 				onClick={() => {
-					fetch("/api/collect")
+					fetch('/api/collect')
 						.then((r) => r.json())
 						.then((res) => {
 							if (res.collected) {
 								toast({
-									title: "Success",
-									description: "You have collected a badge",
-									status: "success",
+									title: 'Success',
+									description: 'You have collected a badge',
+									status: 'success',
 									duration: 5000,
-									isClosable: true,
+									isClosable: true
 								});
-
+ 
 								setUpdate((prev) => prev + 1);
 							} else {
 								toast({
-									title: "Error",
-									description:
-										"You have already collected today's badge",
-									status: "error",
+									title: 'Error',
+									description: "You have already collected today's badge",
+									status: 'error',
 									duration: 5000,
-									isClosable: true,
+									isClosable: true
 								});
 							}
 						});
@@ -142,5 +134,5 @@ const Home: NextPage = () => {
 		</Container>
 	);
 };
-
+ 
 export default Home;
